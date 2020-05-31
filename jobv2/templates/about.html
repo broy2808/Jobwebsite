@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='form-validation.css') }}">
+
+    {% if title %}
+        <title>Flask - {{ title }}</title>
+    {% else %}
+        <title>Job Home</title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark  bg-primary bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="/">JobBoard</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="navbar-brand mr-4" href="">{{request.args.get('username')}}</a>
+              <a class="navbar-brand mr-4" href="{{ url_for('home',username=request.args.get('username')) }}">Home</a>
+              <a class="navbar-brand mr-4" href="{{ url_for('about',username=request.args.get('username')) }}">Profile</a>
+            </div>
+            <!-- Navbar Right Side -->
+
+            <div class="navbar-nav">
+
+              {% if request.args.get('username') is not none %}
+
+                 <a class="navbar-brand mr-4" href="{{ url_for('logout') }}">Logout</a>
+              {% else %}
+                  <a class="navbar-brand mr-4" href="{{ url_for('login') }}">Login</a>
+                  <a class="navbar-brand mr-4" href="{{ url_for('register') }}">Register</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div role="main" class="container w3-teal">
+      <ul class="nav nav-tabs" style="margin-top:10%">
+        <li class="nav-item">
+            <a href="#home" class="nav-link active" data-toggle="tab">Profile Update</a>
+        </li>
+        <li class="nav-item">
+            <a href="#profile" class="nav-link" data-toggle="tab">Profile View</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+      <div class="tab-pane fade show active" id="home">
+      <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+        <!-- <h1 style="color:white">Profile Update Page</h1> -->
+        <!-- <p style="color:white">{{request.args.get('username')}}</p> -->
+
+        <div class="container">
+            <div class="card" style="margin: 10px 0px 10px 0px;">
+             <div class="card-body">
+              <!----all summery-->
+              <h2 class="card-title">Profile Resume Update</h2>
+              <div class="row">
+                <div class="col-md-8 order-md-1">
+                    <div class="mb-3">
+                        <!-- <textarea class="form-control" id="resume" placeholder="Copy paste whole resume" value="" required rows="10" cols="30">
+                        </textarea> -->
+                        <div class="form-group">
+                          {{ form.resume.label(class="form-control-label") }}
+                          {% if form.resume.errors %}
+                              {{ form.resume(class="form-control form-control-lg is-invalid") }}
+                              <div class="invalid-feedback">
+                                  {% for error in form.resume.errors %}
+                                      <span>{{ error }}</span>
+                                  {% endfor %}
+                              </div>
+                          {% else %}
+                              {{ form.resume(class="form-control form-control-lg",placeholder="Copy paste whole resume",value="{{form.resume.data}}") }}
+                          {% endif %}
+                        </div>
+                    </div>
+                  </div>
+               </div>
+              <!----Update address-->
+              <h2 class="card-title">Profile Address Update</h2>
+              <div class="row">
+                <div class="col-md-8 order-md-1">
+                    <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.firstname.label(class="form-control-label") }} -->
+                        {% if form.firstname.errors %}
+                            {{ form.firstname(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.firstname.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.firstname(class="form-control form-control-lg",placeholder="First name",value="form.firstname.data") }} -->
+                            <p>
+                              {{ form.firstname.label }}<br>
+                              {{ form.firstname(size=30, class="form-control")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.lastname.label(class="form-control-label") }} -->
+                        {% if form.lastname.errors %}
+                            {{ form.lastname(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.lastname.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.lastname(class="form-control form-control-lg",value="{{form.lastname.data}}") }} -->
+                            <p>
+                              {{ form.lastname.label }}<br>
+                              {{ form.lastname(size=30, class="form-control")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.city.label(class="form-control-label") }} -->
+                        {% if form.city.errors %}
+                            {{ form.city(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.city.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.city(class="form-control form-control-lg",value="{{form.city.data}}") }} -->
+                            <p>
+                              {{ form.city.label }}<br>
+                              {{ form.city(size=30, class="form-control")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.state.label(class="form-control-label") }} -->
+                        {% if form.state.errors %}
+                            {{ form.state(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.state.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.state(class="form-control form-control-lg",value="{{form.state.data}}") }} -->
+                            <p>
+                              {{ form.state.label }}<br>
+                              {{ form.state(size=30, class="form-control")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.country.label(class="form-control-label") }} -->
+                        {% if form.country.errors %}
+                            {{ form.country(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.country.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.country(class="form-control form-control-lg",value="{{form.country.data}}") }} -->
+                            <p>
+                              {{ form.country.label }}<br>
+                              {{ form.country(size=30, class="form-control")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.zipcode.label(class="form-control-label") }} -->
+                        {% if form.zipcode.errors %}
+                            {{ form.zipcode(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.zipcode.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.zipcode(class="form-control form-control-lg",value="{{form.zipcode.data}}") }} -->
+                            <p>
+                              {{ form.zipcode.label }}<br>
+                              {{ form.zipcode(class="form-control")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                    </div>
+                </div>
+                </div>
+              </div>
+            </div>
+            <!----Education-->
+            <div class="card" style="margin: 10px 0px 10px 0px;">
+              <div class="card-body">
+               <h2 class="card-title">Profile Education Update</h2>
+               <div class="row">
+                 <div class="col-md-8 order-md-1">
+                     <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.degreename.label(class="form-control-label") }} -->
+                        {% if form.degreename.errors %}
+                            {{ form.degreename(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.degreename.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.degreename(class="form-control form-control-lg",value="{{form.degreename.data}}") }} -->
+                            <p>
+                              {{ form.degreename.label }}<br>
+                              {{ form.degreename(class="form-control")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                     </div>
+                     <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.studyfield.label(class="form-control-label") }} -->
+                        {% if form.studyfield.errors %}
+                            {{ form.studyfield(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.studyfield.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.studyfield(class="form-control form-control-lg",value="{{form.studyfield.data}}") }} -->
+                            <p>
+                              {{ form.studyfield.label }}<br>
+                              {{ form.studyfield(class="form-control")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                     </div>
+                     <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.school.label(class="form-control-label") }} -->
+                        {% if form.school.errors %}
+                            {{ form.school(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.school.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.school(class="form-control form-control-lg",value="{{form.school.data}}") }} -->
+                            <p>
+                              {{ form.school.label }}<br>
+                              {{ form.school(class="form-control")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                     </div>
+                     <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.gpa.label(class="form-control-label") }} -->
+                        {% if form.gpa.errors %}
+                            {{ form.gpa(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.gpa.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.gpa(class="form-control form-control-lg",value="{{form.gpa.data}}") }} -->
+                            <p>
+                              {{ form.gpa.label }}<br>
+                              {{ form.gpa(class="form-control")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                     </div>
+                     <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.exp.label(class="form-control-label") }} -->
+                        {% if form.exp.errors %}
+                            {{ form.exp(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.exp.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.exp(class="form-control form-control-lg",value="{{form.exp.data}}") }} -->
+                            <p>
+                              {{ form.exp.label }}<br>
+                              {{ form.exp(class="form-control")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-group">
+                        <!-- {{ form.skillset.label(class="form-control-label") }} -->
+                        {% if form.skillset.errors %}
+                            {{ form.skillset(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.exp.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- {{ form.skillset(class="form-control form-control-lg",value="{{form.skillset.data}}") }} -->
+                            <p>
+                              {{ form.skillset.label }}<br>
+                              {{ form.skillset(class="form-control",placeholder="Please enter desired skillset you want to see in Job Description Separated by Comma(,).")}}<br>
+                            </p>
+                        {% endif %}
+                      </div>
+                    </div>
+                 </div>
+                 </div>
+               </div>
+             </div>
+
+          <!----->
+          <div class="form-group">
+            {{ form.submit(class="btn btn-primary btn-lg") }}
+          </div>
+        </fieldset>
+        </div>
+      </form>
+    </div>
+    <!-----2nd tab-->
+    <div class="tab-pane fade active" id="profile">
+    {% if viewprofile1 %}
+     <h1 style="color:white">Summery of profile</h1>
+       <div class="card" style="margin: 10px 0px 10px 0px;">
+         <div class="card-body">
+           {% for key, value in viewprofile1.items() %}
+           <h4>{{key}}:{{value}}</h4>
+           {% endfor %}
+         </div>
+       </div>
+    {% endif %}
+    </div>
+    </div>
+    <!------>
+  </div><!---main previously-->
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

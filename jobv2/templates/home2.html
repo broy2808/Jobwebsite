@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cover.css') }}">
+
+    {% if title %}
+        <title>Flask - {{ title }}</title>
+    {% else %}
+        <title>Job Home</title>
+    {% endif %}
+    
+</head>
+<body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-primary bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="/">JobBoard</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="navbar-brand mr-4" href="">{{request.args.get('username')}}</a>
+              <a class="navbar-brand mr-4" href="{{ url_for('home',username=request.args.get('username')) }}">Home</a>
+              <a class="navbar-brand mr-4" href="{{ url_for('about',username=request.args.get('username')) }}">Profile</a>
+            </div>
+            <!-- Navbar Right Side -->
+            
+            <div class="navbar-nav">
+                
+              {% if request.args.get('username') is not none %}
+                 
+                 <a class="navbar-brand mr-4" href="{{ url_for('logout') }}">Logout</a> 
+              {% else %}
+                  <a class="navbar-brand mr-4" href="{{ url_for('login') }}">Login</a>
+                  <a class="navbar-brand mr-4" href="{{ url_for('register') }}">Register</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main role="main" class="container">
+      <h3>Recommended Jobs for you!</h3>
+      <div class="row">
+        <div class="col-md-8">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-danger">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          <!----Job-->
+          
+          <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Jobs.." title="Type in a job">
+          <!----Job-->
+          <div id="myUL">
+          {% for job in jobs %}
+          <article class="media content-section bg-dark">
+            <div class="media-body">
+              <div class="article-metadata">
+                <a class="mr-2" href="#">{{ job[0] }}</a>
+                <small class="text">{{ job[1] }}</small>
+              </div>
+              <h2><a class="article-title" href="#">{{ job[3] }}</a></h2>
+              <p class="article-content">{{ job[2] }}</p>
+              {% set ns = namespace(foo=false) %}     
+              {% for jobapp in jobs1%}
+                     {% if jobapp[0] == job[5] %}
+                         {% set ns.foo = True %}  
+                     {%endif%}
+              {% endfor %}
+              {%if ns.foo %}
+              <button type="button" class="btn btn-info">Applied</button>
+              {%else%}
+              <a href="{{ url_for('jobapply',username=request.args.get('username'),jobid=job[5])}}"><button type="button" class="btn btn-success" >Apply</button></a>
+              {%endif%}
+            </div>
+          </article>
+          {% endfor %}
+        </div> 
+        </div>
+        <div class="col-md-4">
+          <div class="content-section">
+            <h3>Our Sidebar</h3>
+            <p class='text-muted'>You can put any information here you'd like.
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Important Articles</li>
+                <li class="list-group-item list-group-item-light">Announcements</li>
+                <li class="list-group-item list-group-item-light"><a class="list-group-item-light nav-link" href="{{url_for('homeall',username=request.args.get('username'))}}">All Job Listings</a></li>
+              </ul>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+      function myFunction() {
+          var input, filter, ul, li, a, i, txtValue;
+          input = document.getElementById("myInput");
+          filter = input.value.toUpperCase();
+          ul = document.getElementById("myUL");
+          li = ul.getElementsByTagName("article");
+          for (i = 0; i < li.length; i++) {
+              p = li[i].getElementsByTagName("p")[0];
+              txtValue = p.textContent || p.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  li[i].style.display = "";
+              } else {
+                  li[i].style.display = "none";
+              }
+          }
+      }
+  </script>
+
+</body>
+</html>
